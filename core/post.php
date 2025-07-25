@@ -17,6 +17,14 @@ class Post
     public $author;
     public $create_at;
 
+    // register properties
+    public $first_name;
+    public $last_name;
+    public $email;
+    public $password;
+
+
+
     //constructor
     public function __construct($conn)
     {

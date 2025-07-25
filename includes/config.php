@@ -1,13 +1,37 @@
 <?php
-$db_user = 'root';
-$db_pass = 'thanhtrung123@#Z';
-$db_name = 'php_api';
-$db_host = 'localhost';
-
-$db = new PDO("mysql:host=$db_host;dbname=$db_name;charset=utf8", $db_user, $db_pass);
-
-$db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-$db->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
-$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 define('APP_NAME', 'PHP REST API TUTORIAL');
+
+class DatabaseService
+{
+    private $host = 'localhost';
+    private $db_name = 'php_api';
+    private $username = 'root';
+    private $password = 'thanhtrung123@#Z';
+    private $conn;
+
+    public function getConnection()
+    {
+        if ($this->conn) return $this->conn;
+
+        try {
+            $this->conn = new PDO(
+                "mysql:host={$this->host};dbname={$this->db_name};charset=utf8",
+                $this->username,
+                $this->password
+            );
+
+            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $this->conn->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+            $this->conn->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
+        } catch (PDOException $e) {
+            echo json_encode([
+                "message" => "Database connection error",
+                "error" => $e->getMessage()
+            ]);
+            exit;
+        }
+
+        return $this->conn;
+    }
+}
