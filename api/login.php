@@ -42,11 +42,12 @@ if ($num > 0) {
 
     if (password_verify($password, $password2)) {
         $secret_key = "YOUR_SECRET_KEY";
-        $issuer_claim = "THE_ISSUER"; // this can be the servername
+        $issuer_claim = "THE_ISSUER";
         $audience_claim = "THE_AUDIENCE";
-        $issuedat_claim = time(); // issued at
-        $notbefore_claim = $issuedat_claim + 10; //not before in seconds
-        $expire_claim = $issuedat_claim + 60; // expire time in seconds
+        $issuedat_claim = time();
+        $notbefore_claim = $issuedat_claim; // ✅ Cho phép dùng token ngay lập tức
+        $expire_claim = $issuedat_claim + 3600; // Token hết hạn sau 1 tiếng
+
         $token = array(
             "iss" => $issuer_claim,
             "aud" => $audience_claim,
@@ -61,9 +62,8 @@ if ($num > 0) {
             )
         );
 
-        http_response_code(200);
-
         $jwt = JWT::encode($token, $secret_key, 'HS256');
+
         echo json_encode(
             array(
                 "message" => "Successful login.",

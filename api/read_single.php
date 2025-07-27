@@ -6,8 +6,14 @@ header('Content-Type: application/json; charset=UTF-8');
 
 //include core files
 include_once('../core/initialize.php');
+include_once '../database/config.php';
+include_once '../core/post.php';
 //instantiate Post object
-$post = new Post($db);
+
+$dbService = new DatabaseService();
+$conn = $dbService->getConnection();
+
+$post = new Post($conn);
 
 
 $post->id = isset($_GET['id']) ? $_GET['id'] : die();

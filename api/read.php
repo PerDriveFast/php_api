@@ -3,11 +3,13 @@
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json; charset=UTF-8');
 
-//include core files
-include_once('../core/initialize.php');
-//instantiate Post object
-$post = new Post($db);
+include_once '../database/config.php';
+include_once '../core/post.php';
 
+$dbService = new DatabaseService();
+$conn = $dbService->getConnection();
+
+$post = new Post($conn);
 
 //post query
 $result = $post->read();

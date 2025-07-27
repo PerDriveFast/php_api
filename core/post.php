@@ -162,4 +162,41 @@ class Post
         }
         return false;
     }
+    public function readUsers()
+    {
+        $query = "SELECT id, first_name, last_name, email, password FROM users";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        return $stmt;
+    }
+
+    public function updateUser()
+    {
+        $query = "UPDATE users SET 
+                    first_name = :first_name, 
+                    last_name = :last_name, 
+                    email = :email, 
+                    password = :password
+                  WHERE id = :id";
+
+        $stmt = $this->conn->prepare($query);
+
+        // sanitize
+        $this->first_name = htmlspecialchars(strip_tags($this->first_name));
+        $this->last_name = htmlspecialchars(strip_tags($this->last_name));
+        $this->email = htmlspecialchars(strip_tags($this->email));
+        $this->password = htmlspecialchars(strip_tags($this->password));
+        $this->id = htmlspecialchars(strip_tags($this->id));
+
+        // bind
+        $stmt->bindParam(':first_name', $this->first_name);
+        $stmt->bindParam(':last_name', $this->last_name);
+        $stmt->bindParam(':email', $this->email);
+        $stmt->bindParam(':password', $this->password);
+        $stmt->bindParam(':id', $this->id);
+
+        if ($stmt->execute()) {
+            return true;
+        }
+    }
 }
