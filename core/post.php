@@ -199,4 +199,31 @@ class Post
             return true;
         }
     }
+
+    public function create_user()
+    {
+        $query = "INSERT INTO users (id, first_name, last_name, email, password) 
+                  VALUES (:id, :first_name, :last_name, :email, :password)";
+
+        $stmt = $this->conn->prepare($query);
+
+        // sanitize
+        $this->id = htmlspecialchars(strip_tags($this->id));
+        $this->first_name = htmlspecialchars(strip_tags($this->first_name));
+        $this->last_name = htmlspecialchars(strip_tags($this->last_name));
+        $this->email = htmlspecialchars(strip_tags($this->email));
+        $this->password = password_hash(htmlspecialchars(strip_tags($this->password)), PASSWORD_BCRYPT);
+
+        // bind
+        $stmt->bindParam(':id', $this->id);
+        $stmt->bindParam(':first_name', $this->first_name);
+        $stmt->bindParam(':last_name', $this->last_name);
+        $stmt->bindParam(':email', $this->email);
+        $stmt->bindParam(':password', $this->password);
+
+        if ($stmt->execute()) {
+            return true;
+        }
+        return false;
+    }
 }
