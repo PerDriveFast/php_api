@@ -226,4 +226,21 @@ class Post
         }
         return false;
     }
+    public function deleteUser()
+    {
+        $query = "DELETE FROM users WHERE id = :id";
+
+        $stmt = $this->conn->prepare($query);
+
+        // sanitize
+        $this->id = htmlspecialchars(strip_tags($this->id));
+
+        // bind
+        $stmt->bindParam(':id', $this->id);
+
+        if ($stmt->execute()) {
+            return true;
+        }
+        return false;
+    }
 }
